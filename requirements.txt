@@ -1,0 +1,5 @@
+mss
+numpy
+opencv-python
+requests
+easyocr
