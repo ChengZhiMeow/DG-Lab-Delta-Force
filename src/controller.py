@@ -6,6 +6,7 @@ import requests
 from typing import List, Dict
 
 from src.utils import ocr
+from src.utils import window
 
 class GameController:
     def __init__(self, config):
@@ -77,8 +78,7 @@ class GameController:
         self.game_started = False
         self._send_strength(self.config.MIN_STRENGTH_VALUE)
 
-    def _process_ocr_results(self, ocr_data: List[Dict], loop_count: int, original_color_img: np.ndarray):
-        print(f"\n--- 使用本工具的第 {loop_count} 秒 ---")
+    def _process_ocr_results(self, ocr_data: List[Dict], original_color_img: np.ndarray):
         results = {item['id']: item['text'] for item in ocr_data if item.get('id') and item.get('text')}
         
         if not results:
@@ -142,30 +142,34 @@ class GameController:
                     start_time = time.time()
                     loop_counter += 1
 
-                    monitor = sct.monitors[1]
-                    sct_img = sct.grab(monitor)
-                    img_np = np.array(sct_img)
+                    print(f"\n--- 使用本工具的第 {loop_counter} 秒 ---")
+                    if window.get_active_process_name() == self.config.PROCESS_NAME:
+                        monitor = sct.monitors[1]
+                        sct_img = sct.grab(monitor)
+                        img_np = np.array(sct_img)
                     
-                    processed_img_np = self._preprocess_image(img_np)
-                    is_success, img_bytes_buffer = cv2.imencode(".png", processed_img_np)
+                        processed_img_np = self._preprocess_image(img_np)
+                        is_success, img_bytes_buffer = cv2.imencode(".png", processed_img_np)
                     
-                    if not is_success:
-                        print("错误：截图编码失败。")
-                        time.sleep(interval_seconds)
-                        continue
+                        if not is_success:
+                            print("  - [错误] 截图编码失败。")
+                            time.sleep(interval_seconds)
+                            continue
                     
-                    ocr_results = ocr.recognize_text_in_regions(
-                        img_bytes_buffer.tobytes(), self.config.REGIONS_TO_SCAN
-                    )
+                        ocr_results = ocr.recognize_text_in_regions(
+                            img_bytes_buffer.tobytes(), self.config.REGIONS_TO_SCAN
+                        )
                     
-                    self._process_ocr_results(ocr_results, loop_counter, img_np)
+                        self._process_ocr_results(ocr_results, img_np)
+                    else:
+                        print("  - [错误] 当前窗口句柄并不在三角洲，所以不做处理。")
 
                     processing_time = time.time() - start_time
                     sleep_time = interval_seconds - processing_time
                     if sleep_time > 0:
                         time.sleep(sleep_time)
                     else:
-                        print(f"警告: 循环 {loop_counter} 耗时 {processing_time:.2f}s, 超出设定间隔 {interval_seconds:.2f}s。")
+                        print(f"  - [警告] 循环 {loop_counter} 耗时 {processing_time:.2f}s, 超出设定间隔 {interval_seconds:.2f}s。")
 
                 except KeyboardInterrupt:
                     print("\n程序被用户中断。正在退出...")
@@ -175,7 +179,7 @@ class GameController:
                     break
                 except Exception as e:
                     import traceback
-                    print(f"主循环发生未预料的错误: {e}")
+                    print(f"  - [错误] 主循环发生未预料的错误: {e}")
                     traceback.print_exc()
-                    print("5秒后重试...")
+                    print("  - [错误] 5秒后重试...")
                     time.sleep(5)

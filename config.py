@@ -19,6 +19,9 @@ MAX_STRENGTH_VALUE = 100
 # 伤害转换乘数 (每损失1%血量，增加多少强度)
 DAMAGE_MULTIPLIER = 1
 
+# 三角洲进程名称
+PROCESS_NAME = "DeltaForceClient-Win64-Shipping.exe"
+
 # --- 扫描区域定义 ---
 # 每个区域包含:
 #   id: 唯一标识符
