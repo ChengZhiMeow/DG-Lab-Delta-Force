@@ -1,7 +1,0 @@
-mss
-numpy
-opencv-python
-requests
-easyocr
-pywin32
-psutil

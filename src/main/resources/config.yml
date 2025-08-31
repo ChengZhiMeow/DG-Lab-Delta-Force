@@ -1,0 +1,168 @@
+# 截图
+capture:
+  # 间隔
+  delay: 1000
+
+# 服务器
+server:
+  # 地址
+  url: "http://127.0.0.1:8920"
+  # 客户端ID
+  # 可以使用 all 操作所有客户端
+  client_id: "65489a26-09f8-4638-bafe-f4f8fadd371c"
+  # API
+  api:
+    # 强度接口
+    strength: "/api/v2/game/{client}/strength"
+
+# OCR服务器
+ocr:
+  # 地址
+  url: "http://127.0.0.1:15666/ocr"
+
+# 强度
+strength:
+  # 最小值
+  min: 3
+  # 最大值
+  max: 100
+  # 随机强度
+  random: 1
+  # 倍率
+  multiplier: 1
+
+# 游戏
+game:
+  # 血量
+  health:
+    # 模式
+    # ONLY_OCR | 纯OCR模式 (性能一般, 准确性高，但会被游戏环境影响)
+    # ONLY_COLOR | 纯颜色比例模式 (性能高, 准确性一般)
+    # BOTH | OCR为主，颜色比例为替代 (性能差，准确性最高)
+    type: "BOTH"
+    # 血量容差值
+    tolerance: 5
+  # 开始
+  start:
+    # 类型
+    # ONLY_GAME_TIME | 检查游戏时间是否存在
+    # ONLY_HEALTH | 检查玩家血量是否存在 (会误判游戏外聊天框)
+    # BOTH | 同时检查 游戏时间、玩家血量 是否存在
+    type: "BOTH"
+  # 结束
+  end:
+    # 类型
+    # ONLY_GAME_TIME | 检查游戏时间是否存在
+    # ONLY_HEALTH | 检查玩家血量是否存在 (会误判游戏外聊天框)
+    # BOTH | 同时检查 游戏时间、玩家血量 是否存在
+    type: "BOTH"
+    # 重置强度
+    reset: true
+    # 找不到组件的次数
+    vl: 3
+
+# 进程
+process:
+  # 名称
+  name: "DeltaForceClient-Win64-Shipping.exe"
+
+# 图片处理
+image:
+  # 锐化
+  sharpening:
+    # 开关
+    # 推荐 2K+ 分辨率开启该功能，可获得更好哦的OCR质量
+    # 最低使用 1080P 分辨率开启该功能，低于该分辨率可能会带来反面效果
+    enable: false
+    # 锐化核
+    kernel:
+      - [ 0.0, -1.0, 0.0 ]
+      - [ -1.0, 5.0, -1.0 ]
+      - [ 0.0, -1.0, 0.0 ]
+
+# 颜色
+colors:
+  # 血条
+  health_bar:
+    常规血条: { color: { r: 205, g: 205, b: 205 }, tolerance: 80 }
+    低血量血条: { color: { r: 150, g: 35, b: 35 }, tolerance: 5 }
+    背包血条: { color: { r: 135, g: 135, b: 135 }, tolerance: 5 }
+
+# 位置
+zones:
+  # 分辨率
+  3840x2160:
+    # 血条
+    health_bar: { right: false, top: false, lt: { x: 188, y: 173 }, rb: { x: 683, y: 158 } }
+    # 血量文本
+    health_text: { right: false, top: false, lt: { x: 187, y: 215 }, rb: { x: 356, y: 180 } }
+    # 游戏时间文本
+    game_time_text: { right: false, top: true, lt: { x: 272, y: 697 }, rb: { x: 384, y: 722 } }
+  2560x1600:
+    health_bar: { right: false, top: false, lt: { x: 126, y: 116 }, rb: { x: 455, y: 106 } }
+    health_text: { right: false, top: false, lt: { x: 120, y: 150 }, rb: { x: 240, y: 120 } }
+    game_time_text: { right: false, top: true, lt: { x: 182, y: 453 }, rb: { x: 256, y: 481 } }
+  2560x1440:
+    health_bar: { right: false, top: false, lt: { x: 126, y: 116 }, rb: { x: 455, y: 106 } }
+    health_text: { right: false, top: false, lt: { x: 120, y: 150 }, rb: { x: 240, y: 120 } }
+    game_time_text: { right: false, top: true, lt: { x: 182, y: 453 }, rb: { x: 256, y: 481 } }
+  2048x1536:
+    health_bar: { right: false, top: false, lt: { x: 101, y: 93 }, rb: { x: 364, y: 85 } }
+    health_text: { right: false, top: false, lt: { x: 100, y: 116 }, rb: { x: 192, y: 97 } }
+    game_time_text: { right: false, top: true, lt: { x: 146, y: 363 }, rb: { x: 204, y: 385 } }
+  1920x1440:
+    health_bar: { right: false, top: false, lt: { x: 94, y: 87 }, rb: { x: 341, y: 80 } }
+    health_text: { right: false, top: false, lt: { x: 93, y: 109 }, rb: { x: 176, y: 90 } }
+    game_time_text: { right: false, top: true, lt: { x: 137, y: 341 }, rb: { x: 192, y: 360 } }
+  1920x1200:
+    health_bar: { right: false, top: false, lt: { x: 94, y: 87 }, rb: { x: 341, y: 80 } }
+    health_text: { right: false, top: false, lt: { x: 93, y: 109 }, rb: { x: 176, y: 90 } }
+    game_time_text: { right: false, top: true, lt: { x: 137, y: 341 }, rb: { x: 192, y: 360 } }
+  1920x1080:
+    health_bar: { right: false, top: false, lt: { x: 94, y: 87 }, rb: { x: 341, y: 80 } }
+    health_text: { right: false, top: false, lt: { x: 93, y: 109 }, rb: { x: 176, y: 90 } }
+    game_time_text: { right: false, top: true, lt: { x: 137, y: 341 }, rb: { x: 192, y: 360 } }
+  1680x1050:
+    health_bar: { right: false, top: false, lt: { x: 83, y: 76 }, rb: { x: 299, y: 70 } }
+    health_text: { right: false, top: false, lt: { x: 82, y: 96 }, rb: { x: 157, y: 79 } }
+    game_time_text: { right: false, top: true, lt: { x: 120, y: 298 }, rb: { x: 167, y: 315 } }
+  1600x1200:
+    health_bar: { right: false, top: false, lt: { x: 79, y: 73 }, rb: { x: 285, y: 67 } }
+    health_text: { right: false, top: false, lt: { x: 78, y: 91 }, rb: { x: 147, y: 57 } }
+    game_time_text: { right: false, top: true, lt: { x: 114, y: 284 }, rb: { x: 159, y: 300 } }
+  1600x1024:
+    health_bar: { right: false, top: false, lt: { x: 79, y: 73 }, rb: { x: 285, y: 67 } }
+    health_text: { right: false, top: false, lt: { x: 78, y: 91 }, rb: { x: 147, y: 57 } }
+    game_time_text: { right: false, top: true, lt: { x: 114, y: 284 }, rb: { x: 159, y: 300 } }
+  1600x900:
+    health_bar: { right: false, top: false, lt: { x: 79, y: 73 }, rb: { x: 285, y: 67 } }
+    health_text: { right: false, top: false, lt: { x: 78, y: 91 }, rb: { x: 147, y: 57 } }
+    game_time_text: { right: false, top: true, lt: { x: 114, y: 284 }, rb: { x: 159, y: 300 } }
+  1440x1080:
+    health_bar: { right: false, top: false, lt: { x: 71, y: 65 }, rb: { x: 256, y: 60 } }
+    health_text: { right: false, top: false, lt: { x: 70, y: 83 }, rb: { x: 133, y: 68 } }
+    game_time_text: { right: false, top: true, lt: { x: 103, y: 256 }, rb: { x: 143, y: 270 } }
+  1366x768:
+    health_bar: { right: false, top: false, lt: { x: 67, y: 62 }, rb: { x: 243, y: 57 } }
+    health_text: { right: false, top: false, lt: { x: 66, y: 78 }, rb: { x: 125, y: 65 } }
+    game_time_text: { right: false, top: true, lt: { x: 98, y: 243 }, rb: { x: 136, y: 256 } }
+  1360x768:
+    health_bar: { right: false, top: false, lt: { x: 67, y: 62 }, rb: { x: 242, y: 57 } }
+    health_text: { right: false, top: false, lt: { x: 66, y: 78 }, rb: { x: 125, y: 64 } }
+    game_time_text: { right: false, top: true, lt: { x: 98, y: 242 }, rb: { x: 135, y: 255 } }
+  1280x960:
+    health_bar: { right: false, top: false, lt: { x: 63, y: 58 }, rb: { x: 228, y: 54 } }
+    health_text: { right: false, top: false, lt: { x: 62, y: 73 }, rb: { x: 121, y: 61 } }
+    game_time_text: { right: false, top: true, lt: { x: 92, y: 228 }, rb: { x: 127, y: 240 } }
+  1280x800:
+    health_bar: { right: false, top: false, lt: { x: 63, y: 58 }, rb: { x: 228, y: 54 } }
+    health_text: { right: false, top: false, lt: { x: 62, y: 73 }, rb: { x: 121, y: 61 } }
+    game_time_text: { right: false, top: true, lt: { x: 92, y: 228 }, rb: { x: 127, y: 240 } }
+  1280x768:
+    health_bar: { right: false, top: false, lt: { x: 63, y: 58 }, rb: { x: 228, y: 54 } }
+    health_text: { right: false, top: false, lt: { x: 62, y: 73 }, rb: { x: 121, y: 61 } }
+    game_time_text: { right: false, top: true, lt: { x: 92, y: 228 }, rb: { x: 127, y: 240 } }
+  1280x720:
+    health_bar: { right: false, top: false, lt: { x: 63, y: 58 }, rb: { x: 228, y: 54 } }
+    health_text: { right: false, top: false, lt: { x: 62, y: 73 }, rb: { x: 121, y: 61 } }
+    game_time_text: { right: false, top: true, lt: { x: 92, y: 228 }, rb: { x: 127, y: 240 } }
