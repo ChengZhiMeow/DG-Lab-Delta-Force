@@ -315,9 +315,6 @@ fun main() {
                 "============郊狼 X 三角洲============"
     )
 
-    val test = ImageIO.read(File("1e3a0b3d-14ab-42c2-8345-bcbf9a8029e2.png"))
-    println(Main.ocrClient.ocrImage(test, null))
-
     var i = 0
     var endVl = 0
     var startGame = false
