@@ -17,6 +17,7 @@ java.targetCompatibility = JavaVersion.VERSION_21
 repositories {
     mavenCentral()
     maven("https://maven.chengzhimeow.cn/releases")
+    maven("https://repo-eo.catnies.top/releases")
 }
 
 dependencies {
@@ -25,7 +26,7 @@ dependencies {
     implementation("net.java.dev.jna:jna:5.17.0")
     implementation("net.java.dev.jna:jna-platform:5.17.0")
 
-    implementation("org.yaml:snakeyaml:2.2")
+    implementation("cn.chengzhimeow:CC-Yaml:2.1.20")
 
     implementation("cn.chengzhiya:MHDF-HttpFramework-client:1.0.9")
 }

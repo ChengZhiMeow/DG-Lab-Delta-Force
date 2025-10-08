@@ -8,7 +8,7 @@ import cn.chengzhiya.dglabdeltaforce.client.OcrClient
 import cn.chengzhiya.dglabdeltaforce.file.FileManager
 import cn.chengzhiya.dglabdeltaforce.jna.JnaWindowUtil
 import cn.chengzhiya.dglabdeltaforce.jna.ext.Capture
-import cn.chengzhiya.dglabdeltaforce.yaml.YamlConfiguration
+import cn.chengzhiya.dglabdeltaforce.yaml.ConfigSetting
 import java.awt.image.BufferedImage
 import java.awt.image.ConvolveOp
 import java.awt.image.Kernel
@@ -17,7 +17,6 @@ import javax.imageio.ImageIO
 import kotlin.math.absoluteValue
 
 object Main {
-    val configFile = File("config.yml")
     val captureDll = File("CaptureLibrary.dll")
 
     val configData = ConfigData()
@@ -26,23 +25,21 @@ object Main {
     val ocrClient = OcrClient()
 
     fun reloadConfig() {
-        val config = YamlConfiguration.loadConfiguration(configFile)
-
         run {
-            configData.capture.delay = config.getInt("capture.delay")!!.toLong()
+            configData.capture.delay = ConfigSetting.instance.data.getInt("capture.delay").toLong()
         }
 
         run {
-            configData.process.name = config.getString("process.name")!!
+            configData.process.name = ConfigSetting.instance.data.getString("process.name")!!
         }
 
         run {
-            configData.image.sharpening.enable = config.getBoolean("image.sharpening.enable")
+            configData.image.sharpening.enable = ConfigSetting.instance.data.getBoolean("image.sharpening.enable")
 
             var width = 0
             var height = 0
             val kernelData = mutableListOf<Float>()
-            config.getList("image.sharpening.kernel")
+            ConfigSetting.instance.data.getList("image.sharpening.kernel", List::class.java)
                 .apply { height = this.size }
                 .map { it as List<Double> }
                 .forEach {
@@ -53,41 +50,41 @@ object Main {
         }
 
         run {
-            configData.strength.min = config.getInt("strength.min")!!
-            configData.strength.max = config.getInt("strength.max")!!
-            configData.strength.random = config.getInt("strength.random")!!
-            configData.strength.multiplier = config.getDouble("strength.multiplier")!!
+            configData.strength.min = ConfigSetting.instance.data.getInt("strength.min")
+            configData.strength.max = ConfigSetting.instance.data.getInt("strength.max")
+            configData.strength.random = ConfigSetting.instance.data.getInt("strength.random")
+            configData.strength.multiplier = ConfigSetting.instance.data.getDouble("strength.multiplier")
         }
 
         run {
-            configData.server.url = config.getString("server.url")!!
-            configData.server.clientId = config.getString("server.client_id")!!
-            configData.server.api.strength = config.getString("server.api.strength")!!
+            configData.server.url = ConfigSetting.instance.data.getString("server.url")!!
+            configData.server.clientId = ConfigSetting.instance.data.getString("server.client_id")!!
+            configData.server.api.strength = ConfigSetting.instance.data.getString("server.api.strength")!!
                 .replace("{client}", configData.server.clientId)
         }
 
         run {
-            configData.ocr.url = config.getString("ocr.url")!!
+            configData.ocr.url = ConfigSetting.instance.data.getString("ocr.url")!!
         }
 
         run {
             configData.colors.clear()
 
-            val colors = config.getConfigurationSection("colors")
-            colors.getKeys().forEach {
+            val colors = ConfigSetting.instance.data.getConfigurationSection("colors")!!
+            colors.keys.forEach {
                 val list = mutableListOf<Color>()
 
-                colors.getConfigurationSection(it!!).getKeys().forEach { c ->
-                    val color = colors.getConfigurationSection("$it.$c")
+                colors.getConfigurationSection(it!!)!!.keys.forEach { c ->
+                    val color = colors.getConfigurationSection("$it.$c")!!
 
                     list.add(
                         Color(
                             java.awt.Color(
-                                color.getInt("color.r")!!,
-                                color.getInt("color.g")!!,
-                                color.getInt("color.b")!!
+                                color.getInt("color.r"),
+                                color.getInt("color.g"),
+                                color.getInt("color.b")
                             ),
-                            color.getInt("tolerance")!!
+                            color.getInt("tolerance")
                         )
                     )
                 }
@@ -99,23 +96,23 @@ object Main {
         run {
             configData.zones.clear()
 
-            val zones = config.getConfigurationSection("zones")
-            zones.getKeys().forEach {
+            val zones = ConfigSetting.instance.data.getConfigurationSection("zones")!!
+            zones.keys.forEach {
                 val map = mutableMapOf<String?, Zone>()
 
-                zones.getConfigurationSection(it!!).getKeys().forEach { z ->
-                    val zone = zones.getConfigurationSection("$it.$z")
+                zones.getConfigurationSection(it!!)!!.keys.forEach { z ->
+                    val zone = zones.getConfigurationSection("$it.$z")!!
 
                     map[z] = Zone(
                         zone.getBoolean("right"),
                         zone.getBoolean("top"),
                         Zone.Pos(
-                            zone.getInt("lt.x")!!,
-                            zone.getInt("lt.y")!!
+                            zone.getInt("lt.x"),
+                            zone.getInt("lt.y")
                         ),
                         Zone.Pos(
-                            zone.getInt("rb.x")!!,
-                            zone.getInt("rb.y")!!
+                            zone.getInt("rb.x"),
+                            zone.getInt("rb.y")
                         )
                     )
                 }
@@ -125,14 +122,17 @@ object Main {
         }
 
         run {
-            configData.game.health.type = Game.Health.Type.valueOf(config.getString("game.health.type")!!)
-            configData.game.health.tolerance = config.getInt("game.health.tolerance")!!
+            configData.game.health.type =
+                Game.Health.Type.valueOf(ConfigSetting.instance.data.getString("game.health.type")!!)
+            configData.game.health.tolerance = ConfigSetting.instance.data.getInt("game.health.tolerance")
 
-            configData.game.start.type = Game.GameCheckType.valueOf(config.getString("game.start.type")!!)
+            configData.game.start.type =
+                Game.GameCheckType.valueOf(ConfigSetting.instance.data.getString("game.start.type")!!)
 
-            configData.game.end.type = Game.GameCheckType.valueOf(config.getString("game.end.type")!!)
-            configData.game.end.reset = config.getBoolean("game.end.reset")
-            configData.game.end.vl = config.getInt("game.end.vl")!!
+            configData.game.end.type =
+                Game.GameCheckType.valueOf(ConfigSetting.instance.data.getString("game.end.type")!!)
+            configData.game.end.reset = ConfigSetting.instance.data.getBoolean("game.end.reset")
+            configData.game.end.vl = ConfigSetting.instance.data.getInt("game.end.vl")
         }
     }
 
@@ -247,7 +247,7 @@ fun initFiles() {
     val fileManager = FileManager()
 
     fileManager.saveResource("CaptureLibrary.dll", "CaptureLibrary.dll", false)
-    fileManager.saveResource("config.yml", "config.yml", false)
+    fileManager.saveResource("ConfigSetting.instance.data.yml", "ConfigSetting.instance.data.yml", false)
 }
 
 fun getGameImage(): BufferedImage? {
@@ -273,7 +273,11 @@ fun preprocessImage(image: BufferedImage): BufferedImage {
 fun getZones(image: BufferedImage) =
     Main.configData.zones["${image.width}x${image.height}"]
 
-fun calculateColorPercentage(image: BufferedImage, color: Color, zone: Zone): Double {
+fun calculateColorPercentage(
+    image: BufferedImage,
+    color: Color,
+    zone: Zone
+): Double {
     val subImage = image.subImage(zone)
     val total = subImage.width.toLong() * subImage.height.toLong()
     var has = 0

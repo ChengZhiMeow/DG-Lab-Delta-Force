@@ -10,7 +10,10 @@ import com.sun.jna.win32.W32APIOptions
 interface User32Ext : User32 {
     fun GetWindowDC(hwnd: WinDef.HWND?): WinDef.HDC?
 
-    fun ClientToScreen(hwnd: WinDef.HWND?, point: WinDef.POINT): Boolean
+    fun ClientToScreen(
+        hwnd: WinDef.HWND?,
+        point: WinDef.POINT
+    ): Boolean
 
     companion object {
         val INSTANCE: User32Ext by lazy { Native.load("user32", User32Ext::class.java, W32APIOptions.DEFAULT_OPTIONS) }

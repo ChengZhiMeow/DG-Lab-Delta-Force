@@ -10,7 +10,10 @@ import javax.imageio.ImageIO
 class OcrClient {
     val httpClient = HttpClient()
 
-    fun ocrImage(image: BufferedImage, zone: Main.ConfigData.Zone?): String? {
+    fun ocrImage(
+        image: BufferedImage,
+        zone: Main.ConfigData.Zone?
+    ): String? {
         val out = ByteArrayOutputStream()
         ImageIO.write(if (zone != null) image.subImage(zone) else image, "png", out)
 

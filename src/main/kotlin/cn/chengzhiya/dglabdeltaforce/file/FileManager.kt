@@ -12,20 +12,31 @@ class ResourceException : Exception {
 
     constructor(cause: Throwable?) : super(cause)
 
-    constructor(message: String?, cause: Throwable?) : super(message, cause)
+    constructor(
+        message: String?,
+        cause: Throwable?
+    ) : super(message, cause)
 }
 
 class FileManager {
     fun formatPath(path: String) = path.replace("\\", "/")
 
-    private fun copyFile(`in`: InputStream, filePath: Path, replace: Boolean) {
+    private fun copyFile(
+        `in`: InputStream,
+        filePath: Path,
+        replace: Boolean
+    ) {
         if (Files.exists(filePath) && !replace) return
 
         filePath.parent?.let { Files.createDirectories(it) }
         Files.copy(`in`, filePath, StandardCopyOption.REPLACE_EXISTING)
     }
 
-    fun saveFolderResource(resourceFolderPath: String, fileFolderPath: String, replace: Boolean) {
+    fun saveFolderResource(
+        resourceFolderPath: String,
+        fileFolderPath: String,
+        replace: Boolean
+    ) {
         var resourceFolderPath = resourceFolderPath
         var fileFolderPath = fileFolderPath
         resourceFolderPath = this.formatPath(resourceFolderPath)
@@ -56,7 +67,11 @@ class FileManager {
         }
     }
 
-    fun saveResource(resourcePath: String, filePath: String, replace: Boolean) {
+    fun saveResource(
+        resourcePath: String,
+        filePath: String,
+        replace: Boolean
+    ) {
         var resourcePath = resourcePath
         var filePath = filePath
         resourcePath = this.formatPath(resourcePath)
