@@ -16,6 +16,6 @@ interface User32Ext : User32 {
     ): Boolean
 
     companion object {
-        val INSTANCE: User32Ext by lazy { Native.load("user32", User32Ext::class.java, W32APIOptions.DEFAULT_OPTIONS) }
+        val INSTANCE by lazy { Native.load("user32", User32Ext::class.java, W32APIOptions.DEFAULT_OPTIONS)!! }
     }
 }

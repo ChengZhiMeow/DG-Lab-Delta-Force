@@ -25,6 +25,6 @@ interface Capture : StdCallLibrary {
     fun FreeCaptureBuffer(buffer: Pointer?)
 
     companion object {
-        val INSTANCE: Capture by lazy { Native.load(Main.captureDll.absolutePath, Capture::class.java) }
+        val INSTANCE by lazy { Native.load(Main.captureDll.absolutePath, Capture::class.java)!! }
     }
 }

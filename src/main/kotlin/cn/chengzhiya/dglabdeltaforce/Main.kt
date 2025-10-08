@@ -5,9 +5,9 @@ import cn.chengzhiya.dglabdeltaforce.capture.BufferedImageAddon.subImage
 import cn.chengzhiya.dglabdeltaforce.capture.CaptureUtil
 import cn.chengzhiya.dglabdeltaforce.client.GameClient
 import cn.chengzhiya.dglabdeltaforce.client.OcrClient
-import cn.chengzhiya.dglabdeltaforce.file.FileManager
 import cn.chengzhiya.dglabdeltaforce.jna.JnaWindowUtil
 import cn.chengzhiya.dglabdeltaforce.jna.ext.Capture
+import cn.chengzhiya.dglabdeltaforce.yaml.ConfigManager
 import cn.chengzhiya.dglabdeltaforce.yaml.ConfigSetting
 import java.awt.image.BufferedImage
 import java.awt.image.ConvolveOp
@@ -244,10 +244,10 @@ class PreImage(
 }
 
 fun initFiles() {
-    val fileManager = FileManager()
+    ConfigManager.instance.fileManager.saveResource("CaptureLibrary.dll", "CaptureLibrary.dll", false)
 
-    fileManager.saveResource("CaptureLibrary.dll", "CaptureLibrary.dll", false)
-    fileManager.saveResource("ConfigSetting.instance.data.yml", "ConfigSetting.instance.data.yml", false)
+    ConfigSetting.instance.saveDefaultFile()
+    ConfigSetting.instance.reload()
 }
 
 fun getGameImage(): BufferedImage? {
