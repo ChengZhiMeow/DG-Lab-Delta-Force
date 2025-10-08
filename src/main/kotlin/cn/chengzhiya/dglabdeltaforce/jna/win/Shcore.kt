@@ -18,6 +18,6 @@ internal interface Shcore : StdCallLibrary, WinNT {
     ): Int
 
     companion object {
-        val INSTANCE: Shcore by lazy { Native.load("shcore", Shcore::class.java, W32APIOptions.DEFAULT_OPTIONS) }
+        val INSTANCE by lazy { Native.load("shcore", Shcore::class.java, W32APIOptions.DEFAULT_OPTIONS)!! }
     }
 }
